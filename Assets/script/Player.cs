@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Mirror;
-public class Player : NetworkBehaviour
+public class Player : MonoBehaviour
 {
     public Transform camera;
     public Rigidbody rigidbody;
@@ -73,8 +72,6 @@ public class Player : NetworkBehaviour
         }
         else
             Debug.Log(isGrounded);
-            
-        
         //Debug.DrawRay(startPos, -transform.up,Color.red ,hitDistance);
     }
     void Crouch(bool set)
@@ -120,13 +117,9 @@ public class Player : NetworkBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
-        if(isLocalPlayer)
-            GameManage.gm.playerCM.Follow = playerCamera;
     }
     
     void Update(){
-        if(!isLocalPlayer)
-            return;
         isGroundRayUpdate();
         if(Input.GetKeyDown(KeyCode.Space))
         {
@@ -138,8 +131,6 @@ public class Player : NetworkBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(!isLocalPlayer)
-            return;
         move();
         cameraControl();
         

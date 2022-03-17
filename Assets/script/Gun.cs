@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using Mirror;
-public class Gun : NetworkBehaviour
+public class Gun : MonoBehaviour
 {
     Ray ray; //射線
     float raylength = 100f; //射線最大長度
