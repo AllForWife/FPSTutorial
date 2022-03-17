@@ -6,31 +6,14 @@ using UnityEngine;
 /// IK 控制
 public class IKController : MonoBehaviour
 {
-    public Transform bodyObj = null;
-    public Transform leftFootObj = null; 
-    public Transform rightFootObj = null; 
-    public Transform leftHandObj = null; 
     public Transform rightHandObj = null; 
     public Transform lookAtObj = null; 
     public Transform rightElbowobj = null; 
-    public Transform leftElbowobj = null; 
-    public Transform rightKneeobj = null;
-    public Transform leftKneeobj = null; 
 
     public Animator avatar;
 
     //  IK啟用
     public bool ikActive = false;
-
-
-
-    void Start()
-    {
-
-
-    }
-
-
 
     void Update()
     {
@@ -38,26 +21,6 @@ public class IKController : MonoBehaviour
         //把對應的控制附上動畫本身的值
         if (!ikActive)
         {
-            if (bodyObj != null)
-            {
-                bodyObj.position = avatar.bodyPosition;
-                bodyObj.rotation = avatar.bodyRotation;
-            }
-            if (leftFootObj != null)
-            {
-                leftFootObj.position = avatar.GetIKPosition(AvatarIKGoal.LeftFoot);
-                leftFootObj.rotation = avatar.GetIKRotation(AvatarIKGoal.LeftFoot);
-            }
-            if (rightFootObj != null)
-            {
-                rightFootObj.position = avatar.GetIKPosition(AvatarIKGoal.RightFoot);
-                rightFootObj.rotation = avatar.GetIKRotation(AvatarIKGoal.RightFoot);
-            }
-            if (leftHandObj != null)
-            {
-                leftHandObj.position = avatar.GetIKPosition(AvatarIKGoal.LeftHand);
-                leftHandObj.rotation = avatar.GetIKRotation(AvatarIKGoal.LeftHand);
-            }
             if (rightHandObj != null)
             {
                 rightHandObj.position = avatar.GetIKPosition(AvatarIKGoal.RightHand);
@@ -70,18 +33,6 @@ public class IKController : MonoBehaviour
             if (rightElbowobj != null)
             {
                 rightElbowobj.position = avatar.GetIKHintPosition(AvatarIKHint.RightElbow);
-            }
-            if (leftElbowobj != null)
-            {
-                leftElbowobj.position = avatar.GetIKHintPosition(AvatarIKHint.LeftElbow);
-            }
-            if (rightKneeobj != null)
-            {
-                rightKneeobj.position = avatar.GetIKHintPosition(AvatarIKHint.RightKnee);
-            }
-            if (leftKneeobj != null)
-            {
-                leftKneeobj.position = avatar.GetIKHintPosition(AvatarIKHint.LeftKnee);
             }
         }
     }
@@ -101,42 +52,14 @@ public class IKController : MonoBehaviour
 
         if (ikActive)
         {
-            avatar.SetIKPositionWeight(AvatarIKGoal.LeftFoot, 0f);
-            avatar.SetIKRotationWeight(AvatarIKGoal.LeftFoot, 0f);
-            avatar.SetIKPositionWeight(AvatarIKGoal.RightFoot, 0f);
-            avatar.SetIKRotationWeight(AvatarIKGoal.RightFoot, 0f);
-            avatar.SetIKPositionWeight(AvatarIKGoal.LeftHand, 0f);
-            avatar.SetIKRotationWeight(AvatarIKGoal.LeftHand, 0f);
+           
             avatar.SetIKPositionWeight(AvatarIKGoal.RightHand, 1.0f);
             avatar.SetIKRotationWeight(AvatarIKGoal.RightHand, 1.0f);
 
-            avatar.SetLookAtWeight(1.0f, 0.3f, 0.6f, 1.0f, 0.5f);
+            avatar.SetLookAtWeight(1,1,1,1,1);
 
             avatar.SetIKHintPositionWeight(AvatarIKHint.RightElbow, 1.0f);
-            avatar.SetIKHintPositionWeight(AvatarIKHint.LeftElbow, 0f);
-            avatar.SetIKHintPositionWeight(AvatarIKHint.RightKnee, 0f);
-            avatar.SetIKHintPositionWeight(AvatarIKHint.LeftKnee, 0f);
-
-            if (bodyObj != null)
-            {
-                avatar.bodyPosition = bodyObj.position;
-                avatar.bodyRotation = bodyObj.rotation;
-            }
-            if (leftFootObj != null)
-            {
-                avatar.SetIKPosition(AvatarIKGoal.LeftFoot, leftFootObj.position);
-                avatar.SetIKRotation(AvatarIKGoal.LeftFoot, leftFootObj.rotation);
-            }
-            if (rightFootObj != null)
-            {
-                avatar.SetIKPosition(AvatarIKGoal.RightFoot, rightFootObj.position);
-                avatar.SetIKRotation(AvatarIKGoal.RightFoot, rightFootObj.rotation);
-            }
-            if (leftHandObj != null)
-            {
-                avatar.SetIKPosition(AvatarIKGoal.LeftHand, leftHandObj.position);
-                avatar.SetIKRotation(AvatarIKGoal.LeftHand, leftHandObj.rotation);
-            }
+            
             if (rightHandObj != null)
             {
                 avatar.SetIKPosition(AvatarIKGoal.RightHand, rightHandObj.position);
@@ -151,18 +74,7 @@ public class IKController : MonoBehaviour
             {
                 avatar.SetIKHintPosition(AvatarIKHint.RightElbow, rightElbowobj.position);
             }
-            if (leftElbowobj != null)
-            {
-                avatar.SetIKHintPosition(AvatarIKHint.LeftElbow, leftElbowobj.position);
-            }
-            if (rightKneeobj != null)
-            {
-                avatar.SetIKHintPosition(AvatarIKHint.RightKnee, rightKneeobj.position);
-            }
-            if (leftKneeobj != null)
-            {
-                avatar.SetIKHintPosition(AvatarIKHint.LeftKnee, leftKneeobj.position);
-            }
+            
 
         }
         // IK 不啟用 

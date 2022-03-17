@@ -46,17 +46,13 @@ public class Gun : MonoBehaviour
     public IEnumerator shake()
     {
         while(true){
-
             if(shakeBool)
-            { //tweener.PlayBackwards()
-                
+            { 
                 Vector3 startPos = transform.localPosition;
                 Vector3 endPos = new Vector3(startPos.x + shakePos.x, startPos.y + shakePos.y ,startPos.z + shakePos.z) ;
                 transform.DOLocalMove(endPos,shootSpeed);
                 yield return new WaitForSeconds(shootSpeed);
                 transform.DOLocalMove(startPos,shootSpeed);
-                // tweener.Play();
-                //transform.DOShakePosition(0.1f,strength:0.1f);
                 yield return new WaitForSeconds(shootSpeed);
                 shakeBool=false;
             }
@@ -77,12 +73,9 @@ public class Gun : MonoBehaviour
                 if(hit.transform.CompareTag("Enemy")){
                     hit.transform.gameObject.SetActive(false);
                 }
-                // GameObject bulletHole = Instantiate(bulletholePrefab, hit.point + hit.normal * 0.001f, Quaternion.identity);
                 GameObject bulletHole = Instantiate(bulletholePrefab, hit.point , Quaternion.identity);
                 bulletHole.transform.LookAt(hit.point + hit.normal);
                 Destroy(bulletHole, 3f);
-                //transform. (shakeEndPos);
-                
                 //當射線打到物件時會在Scene視窗畫出黃線，方便查閱
                 Debug.DrawLine(ray.origin, hit.point, Color.yellow);
                 print(hit.transform.name);
@@ -93,9 +86,5 @@ public class Gun : MonoBehaviour
                 shakeBool=true;
         }
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

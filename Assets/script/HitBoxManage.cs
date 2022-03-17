@@ -34,10 +34,6 @@ public class HitBoxManage : MonoBehaviour
     public Player player;
     public List<HitBoxBone> HitBoxList = new List<HitBoxBone>();
     // Start is called before the first frame update
-    void Start()
-    {
-
-    }
     void addHitBox(HumanBodyBones bone)
     {
         if(!HitBoxList.Exists(x => x.name == bone.ToString()))
@@ -133,13 +129,5 @@ public class HitBoxManage : MonoBehaviour
             setHitBoxColider(HumanBodyBones.RightUpperLeg,HumanBodyBones.RightLowerLeg);
             setHitBoxColider(HumanBodyBones.RightLowerLeg,HumanBodyBones.RightFoot);
         }
-    }
-    private void OnCollisionEnter(Collision other) {
-        
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

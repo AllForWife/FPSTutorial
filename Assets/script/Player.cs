@@ -24,38 +24,47 @@ public class Player : MonoBehaviour
     float inputHorizontal;
     float inputVertical;
     public Gun weapon;
-    void move()
+    void move()//移動
     {
         inputHorizontal = Input.GetAxis("Horizontal");
 		inputVertical = Input.GetAxis("Vertical");
+        // horizontal為Unity的預設Input 對應按下A、D或左右鍵時 會獲得(左)-1~1(右)的值
+        // Vertical為Unity的預設Input 對應按下W、S或上下鍵時 會獲得(下)-1~1(上)的值
         float hMove = inputHorizontal  * moveSpeed * Time.deltaTime;
         float vMove = inputVertical * moveSpeed * Time.deltaTime;
         Vector3 target= Vector3.zero;
-        if(inputHorizontal!=0 || inputVertical!=0)
+        
+        if(inputHorizontal!=0 || inputVertical!=0)//當讀取到玩家有輸入移動按鍵
         {
+            //設定目標移動位置為當前玩家正前方向量*Vertical + 當前玩家右方向量*horizontal
             target = transform.forward * vMove + transform.right * hMove ;
+            //設定當前狀態為正在移動 之後動畫狀態機會用到
             isMoving = true;
         }
         else {
+            //沒移動的話 就把目標移動位置設為0
             target = Vector3.zero;
+            //設定當前狀態為未移動 之後動畫狀態機會用到
             isMoving = false;
         }
-
+        //將目標移動位置y向量設為當前速率的y 以避免在跳躍時移動造成可無視重力在空中平移
         target.y = rigidbody.velocity.y;
-        //print(target);
+        //將rigidbody的速率設成目標移動位置讓玩家移動
         rigidbody.velocity = target;
-        //Vector3 moveInput = new Vector3( h, 0 ,v );
-        //rigidbody.velocity = moveInput;
     }
     void isGroundRayUpdate(){
         var startPos = transform.position;
         startPos.y = transform.position.y + hitDistance;
-        var jumpRay = Physics.Raycast(startPos, -transform.up, hitDistance *2, groundLayer);
+        //發射一條射線 用以偵測玩家腳下所佔的是地板 以此來判斷是否可以跳躍
+        //Physics.Raycast(發射位置(玩家位置+發射距離), 發射方向(下方), 發射長度(距離*2), 射線能射中的圖層);
+        bool jumpRay = Physics.Raycast(startPos, -transform.up, hitDistance *2, groundLayer);
         isGrounded = jumpRay;
+        // 可在Scene視窗中預覽的射線
         Debug.DrawRay(startPos, -transform.up * hitDistance*2, Color.red);
     }
     void animatorStateUpdate()
     {
+        // 隨時更新animator的狀態機
         animator.SetBool("isGround",isGrounded);
         animator.SetFloat("moveH",inputHorizontal);
         animator.SetFloat("moveV",inputVertical);
@@ -64,17 +73,14 @@ public class Player : MonoBehaviour
     }
     void jump()
     {
-            //ray = RaycastHit//Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
         if (isGrounded)
         {
-           // rigidbody.velocity = new Vector3(rigidbody.velocity.x, 0, rigidbody.velocity.z);
             rigidbody.velocity += jumpSpeed * Vector3.up * Time.deltaTime;
         }
         else
             Debug.Log(isGrounded);
-        //Debug.DrawRay(startPos, -transform.up,Color.red ,hitDistance);
     }
-    void Crouch(bool set)
+    void Crouch(bool set)//蹲下
     {
         if(set && isGrounded)
         {
@@ -82,6 +88,7 @@ public class Player : MonoBehaviour
                 isCrouch = true;         
                 GetComponent<CapsuleCollider>().height/=2;
                 moveSpeed/=2;
+                //當蹲下時，將碰撞盒高度/2、移動速度/2
             }
         }
         else 
@@ -91,6 +98,7 @@ public class Player : MonoBehaviour
                 GetComponent<CapsuleCollider>().height*=2;
                 moveSpeed*=2;
                 isCrouch = false;
+                //當從蹲下站起來，將碰撞盒高度*2、移動速度*2
             }
             
         }
@@ -100,23 +108,25 @@ public class Player : MonoBehaviour
  
         float x = Input.GetAxis("Mouse X") * mouseSpeed * Time.deltaTime;
 		float y = Input.GetAxis("Mouse Y") * mouseSpeed * Time.deltaTime;
-
+        //讀取滑鼠的輸入
         rotateX += x;
         rotateY += y;
         if(rotateY >= maxRotateY)
             rotateY=maxRotateY;
         else if(rotateY <= minRotateY)
             rotateY=minRotateY;
+        //限制移動速度的範圍
         transform.rotation = Quaternion.Euler(0,rotateX,0);
+        //將玩家自己的y軸旋轉角度根據滑鼠的x軸旋轉
         camera.localRotation = Quaternion.Euler(-rotateY,0,0);
+        //將玩家camera的x軸旋轉角度根據滑鼠的-y軸旋轉
     }
  
-    // Start is called before the first frame update
-    public Transform playerCamera;
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
+        //鎖定使用者的滑鼠 並讓其不顯示
     }
     
     void Update(){
@@ -124,7 +134,11 @@ public class Player : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
         {
             jumpInputKey=true;
+            //由於跳躍多了一個射線偵測地板的動作
+            //使得放於FixedUpdate偵測按鍵會卡頓
+            //所以需要將其邏輯偵(按鍵偵測(放於Update))跟物理偵(執行實際移動(放於FixedUpdate))拆開來
         }
+        
 
         animatorStateUpdate();
     }
@@ -151,6 +165,5 @@ public class Player : MonoBehaviour
         {
             Crouch(false);
         }
-        
     }
 }
